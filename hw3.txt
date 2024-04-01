@@ -1,0 +1,79 @@
+1-Aşağıdaki kavramları örneklerle açıklayın. (10 PUAN)
+• Unit test
+• Integration test
+
+Unit test, bir yazılımın en küçük, mantıksal olarak izole edilebilir parçalarını test etme işlemidir. Genellikle fonksiyonlar, metodlar veya sınıflar gibi küçük kod parçaları üzerinde gerçekleştirilir. Bu testler, dış bağımlılıklardan izole edilmiş olmalıdır ve genellikle birim test çerçeveleri kullanılarak otomatikleştirilir. Amacı, her bir birim kodun doğru çalıştığından emin olmaktır.
+
+Entegrasyon testi ise bir yazılımın farklı bileşenlerinin veya birimlerinin bir araya getirilerek çalışıp çalışmadığını test etme işlemidir. Bu testler, farklı modüllerin veya alt sistemlerin bir araya geldiği noktalarda gerçekleştirilir. Genellikle dış bağımlılıklara ve sistem kaynaklarına erişim gerektirebilirler. Amacı, birimlerin bir araya geldiğinde beklenen şekilde çalıştığından emin olmaktır.
+
+Kısacası, unit testler yazılımın en küçük parçalarını test ederken, entegrasyon testleri farklı parçaların bir araya geldiğinde nasıl çalıştığını kontrol eder. Unit testlerin odak noktası izolasyon ve doğrulukturken, entegrasyon testlerinin odak noktası ise farklı parçaların bir araya gelme ve uyumluluktur.
+
+#unit test
+public class Calculator {
+    public int add(int a, int b) {
+        return a + b;
+    }
+    
+    public int subtract(int a, int b) {
+        return a - b;
+    }
+}
+
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+
+public class CalculatorTest {
+    @Test
+    public void testAdd() {
+        Calculator calculator = new Calculator();
+        int result = calculator.add(3, 5);
+        assertEquals(8, result);
+    }
+    
+    @Test
+    public void testSubtract() {
+        Calculator calculator = new Calculator();
+        int result = calculator.subtract(10, 4);
+        assertEquals(6, result);
+    }
+}
+Yukarıdaki örnek, bir hesap makinesi sınıfının add ve subtract metodlarını test eder. Her test, metodun beklenen sonuçlarını doğrular.
+
+#Integration test
+public class UserService {
+    private Database database;
+
+    public UserService(Database database) {
+        this.database = database;
+    }
+
+    public boolean createUser(String username, String password) {
+        // User creation logic
+        return database.saveUser(username, password);
+    }
+}
+public class Database {
+    public boolean saveUser(String username, String password) {
+        // Database interaction logic
+        // Assume it saves the user and returns true
+        return true;
+    }
+}
+import org.junit.Test;
+import static org.junit.Assert.assertTrue;
+
+public class UserServiceIntegrationTest {
+    @Test
+    public void testCreateUser() {
+        Database database = new Database(); // External dependency
+        UserService userService = new UserService(database);
+        
+        boolean result = userService.createUser("john_doe", "password123");
+        
+        assertTrue(result);
+    }
+}
+
+
+Yukarıdaki örnek, UserService sınıfının createUser metodunu entegrasyon testi eder. Bu test, UserService ve Database sınıflarının birlikte doğru şekilde çalıştığını kontrol eder. Ancak, veritabanına gerçek bir erişim sağlamaz, çünkü bu bir birim testi değil, bir entegrasyon testidir. Gerçek bir entegrasyon testi, gerçek bir veritabanı bağlantısı kullanarak yapılmalıdır, ancak test süresini azaltmak ve dışa bağımlılıkları en aza indirmek için genellikle sahte veritabanları veya veritabanı yerine geçen hafif uygulamalar kullanılır.
+
